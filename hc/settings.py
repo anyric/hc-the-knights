@@ -20,7 +20,7 @@ HOST = "localhost"
 SECRET_KEY = "---"
 DEBUG = True
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost',
-                 'the-knights-health-checks.herokuapp.com']
+                 'hc-the-knight.herokuapp.com']
 DEFAULT_FROM_EMAIL = 'healthchecks@example.org'
 USE_PAYMENTS = False
 
@@ -121,6 +121,13 @@ if os.environ.get("DB") == "mysql":
         }
     }
 
+if os.environ.get("HEROKU") == "TRUE":
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+if os.environ.get("HEROKU") == "TRUE":
+    db_from_env = dj_database_url.config()
+    DATABASES[default].update(db_from_env)
+
 if os.environ.get("HEROKU") == 'TRUE':
     db_from_env = dj_database_url.config()
     DATABASES['default'].update(db_from_env)
@@ -165,6 +172,7 @@ PUSHOVER_EMERGENCY_EXPIRATION = 86400
 # Pushbullet integration -- override these in local_settings
 PUSHBULLET_CLIENT_ID = None
 PUSHBULLET_CLIENT_SECRET = None
+
 
 if os.path.exists(os.path.join(BASE_DIR, "hc/local_settings.py")):
     from .local_settings import *
