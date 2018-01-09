@@ -91,6 +91,9 @@ DATABASES = {
     }
 }
 
+if os.environ.get("HEROKU") == 'TRUE':
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
 # You can switch database engine to postgres or mysql using environment
 # variable 'DB'. Travis CI does this.
 if os.environ.get("DB") == "postgres":
@@ -103,14 +106,6 @@ if os.environ.get("DB") == "postgres":
         }
     }
 
-if os.environ.get("HEROKU") == 'TRUE':
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
-if os.environ.get("HerokuDeploy") == "1":
-    DATABASES = {
-        'default': dj_database_url.config()
-    }
-
 if os.environ.get("DB") == "mysql":
     DATABASES = {
         'default': {
@@ -120,13 +115,6 @@ if os.environ.get("DB") == "mysql":
             'TEST': {'CHARSET': 'UTF8'}
         }
     }
-
-if os.environ.get("HEROKU") == "TRUE":
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
-if os.environ.get("HEROKU") == "TRUE":
-    db_from_env = dj_database_url.config()
-    DATABASES[default].update(db_from_env)
 
 if os.environ.get("HEROKU") == 'TRUE':
     db_from_env = dj_database_url.config()
@@ -154,7 +142,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 COMPRESS_OFFLINE = True
 
 EMAIL_BACKEND = "djmail.backends.default.EmailBackend"
@@ -172,7 +160,6 @@ PUSHOVER_EMERGENCY_EXPIRATION = 86400
 # Pushbullet integration -- override these in local_settings
 PUSHBULLET_CLIENT_ID = None
 PUSHBULLET_CLIENT_SECRET = None
-
 
 if os.path.exists(os.path.join(BASE_DIR, "hc/local_settings.py")):
     from .local_settings import *
